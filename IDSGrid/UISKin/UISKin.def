@@ -1,0 +1,7 @@
+; UISKin.def : Declares the module parameters for the DLL.
+
+;LIBRARY      "UISKin"
+DESCRIPTION  'UISKin Windows Dynamic Link Library'
+
+EXPORTS
+    ; Explicit exports can go here

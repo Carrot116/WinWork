@@ -401,6 +401,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy              /y               .\debug\UISKin_D.dll               ..\GridDemo\debug\&#x0D;&#x0A;copy              /y               .\debug\UISKin_D.lib               ..\GridDemo\&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>

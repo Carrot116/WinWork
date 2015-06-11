@@ -218,6 +218,7 @@ void CGridDemoDlg::CreateGrid()
 	m_pGridCtrl->SetRowFullSelect(TRUE);
 	m_pGridCtrl->AllowSelectRowInFixedCol(TRUE);
 	m_pGridCtrl->SetSingleRowSelection(TRUE);
+	m_pGridCtrl->SetSingleColSelection(TRUE);
 	m_pGridCtrl->SetHeaderSort(TRUE);
 // 	m_pGridCtrl->SetGridLines(GVL_NONE);
 	m_pGridCtrl->SetGridLines(GVL_NONE);

@@ -53,6 +53,10 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+#define UP_ARROW_CHAR			_T("↑")				// 上箭头
+#define DOWN_ARROW_CHAR			_T("↓")				// 下箭头
+
+
 IMPLEMENT_DYNAMIC(CIDSGridCellBase, CObject)
 
 /////////////////////////////////////////////////////////////////////////////
@@ -422,133 +426,154 @@ BOOL CIDSGridCellBase::Draw(CDC* pDC, int nRow, int nCol, CRect rect,  BOOL bEra
         }
     }
 
-    // Draw sort arrow
+	// Modify by Carrot 20150611
+//    // Draw sort arrow
+//	int nSortCol = pGrid->GetSortColumn();
+//    if (nSortCol == nCol && nRow == 0)
+//    {
+//        CSize size = pDC->GetTextExtent(_T("M"));
+//        int nOffset = 2;
+//
+//        // Base the size of the triangle on the smaller of the column
+//        // height or text height with a slight offset top and bottom.
+//        // Otherwise, it can get drawn outside the bounds of the cell.
+//        size.cy -= (nOffset * 2);
+//
+//        if (size.cy >= rect.Height())
+//            size.cy = rect.Height() - (nOffset * 2);
+//
+//        size.cx = size.cy;      // Make the dimensions square
+//
+//        // Kludge for vertical text
+//        BOOL bVertical = (GetFont()->lfEscapement == 900);
+//
+//        // Only draw if it'll fit!
+//        //if (size.cx + rect.left < rect.right + (int)(2*GetMargin())) - changed / Yogurt
+//        if (size.cx + rect.left < rect.right)
+//        {
+//            int nTriangleBase = rect.bottom - nOffset - size.cy;    // Triangle bottom right
+//            //int nTriangleBase = (rect.top + rect.bottom - size.cy)/2; // Triangle middle right
+//            //int nTriangleBase = rect.top + nOffset;                 // Triangle top right
+//
+//            //int nTriangleLeft = rect.right - size.cx;                 // Triangle RHS
+//            //int nTriangleLeft = (rect.right + rect.left - size.cx)/2; // Triangle middle
+//            //int nTriangleLeft = rect.left;                            // Triangle LHS
+//
+//            int nTriangleLeft;
+//            if (bVertical)
+//                nTriangleLeft = (rect.right + rect.left - size.cx)/2; // Triangle middle
+//            else
+//                nTriangleLeft = rect.right - size.cx;               // Triangle RHS
+//
+//            CPen penShadow(PS_SOLID, 0, ::GetSysColor(COLOR_3DSHADOW));
+//            CPen penLight(PS_SOLID, 0, ::GetSysColor(COLOR_3DHILIGHT));
+//			int nArrowLef = rect.right - 8;
+//			BOOL bAsc = pGrid->GetSortAscending();
+//            if (bAsc)
+//            {
+//                // Draw triangle pointing upwards
+//#if 1
+//				ARROWSTRUCT tArrow;
+//				CBrush br1, br2, *pbrOld;
+//				
+//				CPen cRedPen(PS_SOLID, 1,  RGB(255, 0 , 0));
+//				CPen * pOldPen = pDC->SelectObject(&cRedPen);
+//				
+//				br1.CreateSolidBrush(RGB(255,0,0));
+//				br2.CreateSolidBrush(RGB(255,255,0));
+//				pbrOld = pDC->SelectObject(&br1);
+//				
+//				// setup arrows
+//				tArrow.nWidth = 6;
+//				tArrow.fTheta = 3.14159/4 ;
+//				tArrow.bFill = true;
+//				pDC->SetBkColor(RGB(255,0,0));
+//				
+//				pDC->MoveTo(nArrowLef, rect.top + 16);
+//				ArrowTo(pDC->m_hDC, nArrowLef, rect.top, &tArrow);
+//
+//				pDC->SelectObject(pbrOld);
+//				pDC->SelectObject(pOldPen);
+//#else
+//                CPen *pOldPen = (CPen*) pDC->SelectObject(&penLight);
+//                pDC->MoveTo( nTriangleLeft + 1, nTriangleBase + size.cy + 1);
+//                pDC->LineTo( nTriangleLeft + (size.cx / 2) + 1, nTriangleBase + 1 );
+//                pDC->LineTo( nTriangleLeft + size.cx + 1, nTriangleBase + size.cy + 1);
+//                pDC->LineTo( nTriangleLeft + 1, nTriangleBase + size.cy + 1);
+//
+//                pDC->SelectObject(&penShadow);
+//                pDC->MoveTo( nTriangleLeft, nTriangleBase + size.cy );
+//                pDC->LineTo( nTriangleLeft + (size.cx / 2), nTriangleBase );
+//                pDC->LineTo( nTriangleLeft + size.cx, nTriangleBase + size.cy );
+//                pDC->LineTo( nTriangleLeft, nTriangleBase + size.cy );
+//                pDC->SelectObject(pOldPen);
+//#endif
+//            }
+//            else
+//            {
+//                // Draw triangle pointing downwards
+//#if 1				
+//				ARROWSTRUCT tArrow;
+//				CBrush br1, br2, *pbrOld;
+//				
+//				CPen cRedPen(PS_SOLID, 1,  RGB(255, 0 , 0));
+//				CPen * pOldPen = pDC->SelectObject(&cRedPen);
+//				
+//				br1.CreateSolidBrush(RGB(255,0,0));
+//				br2.CreateSolidBrush(RGB(255,255,0));
+//				pbrOld = pDC->SelectObject(&br1);
+//				
+//				// setup arrows
+//				tArrow.nWidth = 6;
+//				tArrow.fTheta = 3.14159/4 ;
+//				tArrow.bFill = true;
+//				pDC->SetBkColor(RGB(255,0,0));
+//				
+//				pDC->MoveTo(nArrowLef, rect.top );
+//				ArrowTo(pDC->m_hDC, nArrowLef, rect.top + 16, &tArrow);
+//				
+//				pDC->SelectObject(pbrOld);
+//				pDC->SelectObject(pOldPen);
+//#else
+//                CPen *pOldPen = (CPen*) pDC->SelectObject(&penLight);
+//                pDC->MoveTo( nTriangleLeft + 1, nTriangleBase + 1 );
+//                pDC->LineTo( nTriangleLeft + (size.cx / 2) + 1, nTriangleBase + size.cy + 1 );
+//                pDC->LineTo( nTriangleLeft + size.cx + 1, nTriangleBase + 1 );
+//                pDC->LineTo( nTriangleLeft + 1, nTriangleBase + 1 );
+//    
+//                pDC->SelectObject(&penShadow);
+//                pDC->MoveTo( nTriangleLeft, nTriangleBase );
+//                pDC->LineTo( nTriangleLeft + (size.cx / 2), nTriangleBase + size.cy );
+//                pDC->LineTo( nTriangleLeft + size.cx, nTriangleBase );
+//                pDC->LineTo( nTriangleLeft, nTriangleBase );
+//                pDC->SelectObject(pOldPen);
+//#endif
+//            }
+//            
+//            if (!bVertical)
+//                rect.right -= size.cy;
+//        }
+//    }
+
+	// 绘制箭头
+	BOOL bShowArrow(FALSE);
 	int nSortCol = pGrid->GetSortColumn();
+	CString strArrow;
+	CRect rcArrow(0, 0, 0, 0);
+	COLORREF clrArrow = RGB(0XFF, 0X00, 0X00);
     if (nSortCol == nCol && nRow == 0)
-    {
-        CSize size = pDC->GetTextExtent(_T("M"));
-        int nOffset = 2;
-
-        // Base the size of the triangle on the smaller of the column
-        // height or text height with a slight offset top and bottom.
-        // Otherwise, it can get drawn outside the bounds of the cell.
-        size.cy -= (nOffset * 2);
-
-        if (size.cy >= rect.Height())
-            size.cy = rect.Height() - (nOffset * 2);
-
-        size.cx = size.cy;      // Make the dimensions square
-
-        // Kludge for vertical text
-        BOOL bVertical = (GetFont()->lfEscapement == 900);
-
-        // Only draw if it'll fit!
-        //if (size.cx + rect.left < rect.right + (int)(2*GetMargin())) - changed / Yogurt
-        if (size.cx + rect.left < rect.right)
-        {
-            int nTriangleBase = rect.bottom - nOffset - size.cy;    // Triangle bottom right
-            //int nTriangleBase = (rect.top + rect.bottom - size.cy)/2; // Triangle middle right
-            //int nTriangleBase = rect.top + nOffset;                 // Triangle top right
-
-            //int nTriangleLeft = rect.right - size.cx;                 // Triangle RHS
-            //int nTriangleLeft = (rect.right + rect.left - size.cx)/2; // Triangle middle
-            //int nTriangleLeft = rect.left;                            // Triangle LHS
-
-            int nTriangleLeft;
-            if (bVertical)
-                nTriangleLeft = (rect.right + rect.left - size.cx)/2; // Triangle middle
-            else
-                nTriangleLeft = rect.right - size.cx;               // Triangle RHS
-
-            CPen penShadow(PS_SOLID, 0, ::GetSysColor(COLOR_3DSHADOW));
-            CPen penLight(PS_SOLID, 0, ::GetSysColor(COLOR_3DHILIGHT));
-			int nArrowLef = rect.right - 8;
-			BOOL bAsc = pGrid->GetSortAscending();
-            if (bAsc)
-            {
-                // Draw triangle pointing upwards
-#if 1
-				ARROWSTRUCT tArrow;
-				CBrush br1, br2, *pbrOld;
-				
-				CPen cRedPen(PS_SOLID, 1,  RGB(255, 0 , 0));
-				CPen * pOldPen = pDC->SelectObject(&cRedPen);
-				
-				br1.CreateSolidBrush(RGB(255,0,0));
-				br2.CreateSolidBrush(RGB(255,255,0));
-				pbrOld = pDC->SelectObject(&br1);
-				
-				// setup arrows
-				tArrow.nWidth = 6;
-				tArrow.fTheta = 3.14159/4 ;
-				tArrow.bFill = true;
-				pDC->SetBkColor(RGB(255,0,0));
-				
-				pDC->MoveTo(nArrowLef, rect.top + 16);
-				ArrowTo(pDC->m_hDC, nArrowLef, rect.top, &tArrow);
-
-				pDC->SelectObject(pbrOld);
-				pDC->SelectObject(pOldPen);
-#else
-                CPen *pOldPen = (CPen*) pDC->SelectObject(&penLight);
-                pDC->MoveTo( nTriangleLeft + 1, nTriangleBase + size.cy + 1);
-                pDC->LineTo( nTriangleLeft + (size.cx / 2) + 1, nTriangleBase + 1 );
-                pDC->LineTo( nTriangleLeft + size.cx + 1, nTriangleBase + size.cy + 1);
-                pDC->LineTo( nTriangleLeft + 1, nTriangleBase + size.cy + 1);
-
-                pDC->SelectObject(&penShadow);
-                pDC->MoveTo( nTriangleLeft, nTriangleBase + size.cy );
-                pDC->LineTo( nTriangleLeft + (size.cx / 2), nTriangleBase );
-                pDC->LineTo( nTriangleLeft + size.cx, nTriangleBase + size.cy );
-                pDC->LineTo( nTriangleLeft, nTriangleBase + size.cy );
-                pDC->SelectObject(pOldPen);
-#endif
-            }
-            else
-            {
-                // Draw triangle pointing downwards
-#if 1				
-				ARROWSTRUCT tArrow;
-				CBrush br1, br2, *pbrOld;
-				
-				CPen cRedPen(PS_SOLID, 1,  RGB(255, 0 , 0));
-				CPen * pOldPen = pDC->SelectObject(&cRedPen);
-				
-				br1.CreateSolidBrush(RGB(255,0,0));
-				br2.CreateSolidBrush(RGB(255,255,0));
-				pbrOld = pDC->SelectObject(&br1);
-				
-				// setup arrows
-				tArrow.nWidth = 6;
-				tArrow.fTheta = 3.14159/4 ;
-				tArrow.bFill = true;
-				pDC->SetBkColor(RGB(255,0,0));
-				
-				pDC->MoveTo(nArrowLef, rect.top );
-				ArrowTo(pDC->m_hDC, nArrowLef, rect.top + 16, &tArrow);
-				
-				pDC->SelectObject(pbrOld);
-				pDC->SelectObject(pOldPen);
-#else
-                CPen *pOldPen = (CPen*) pDC->SelectObject(&penLight);
-                pDC->MoveTo( nTriangleLeft + 1, nTriangleBase + 1 );
-                pDC->LineTo( nTriangleLeft + (size.cx / 2) + 1, nTriangleBase + size.cy + 1 );
-                pDC->LineTo( nTriangleLeft + size.cx + 1, nTriangleBase + 1 );
-                pDC->LineTo( nTriangleLeft + 1, nTriangleBase + 1 );
-    
-                pDC->SelectObject(&penShadow);
-                pDC->MoveTo( nTriangleLeft, nTriangleBase );
-                pDC->LineTo( nTriangleLeft + (size.cx / 2), nTriangleBase + size.cy );
-                pDC->LineTo( nTriangleLeft + size.cx, nTriangleBase );
-                pDC->LineTo( nTriangleLeft, nTriangleBase );
-                pDC->SelectObject(pOldPen);
-#endif
-            }
-            
-            if (!bVertical)
-                rect.right -= size.cy;
-        }
-    }
+	{
+		bShowArrow = TRUE;
+		BOOL bAsc = pGrid->GetSortAscending();
+		if (bAsc)
+			strArrow =  UP_ARROW_CHAR;
+		else
+		{
+			strArrow = DOWN_ARROW_CHAR;
+			clrArrow = RGB(0X00, 0XFF, 0X00);
+		}
+		pDC->DrawText(strArrow, rcArrow, DT_CALCRECT | DT_SINGLELINE);
+	}
 
     // We want to see '&' characters so use DT_NOPREFIX
     GetTextRect(rect);
@@ -557,15 +582,84 @@ BOOL CIDSGridCellBase::Draw(CDC* pDC, int nRow, int nCol, CRect rect,  BOOL bEra
     
 	//使用DT_CALCRECT，DT_CENTER，DT_EDITCONTROL，DT_WORDBREAK参数计算需要的文本高度 
 	//多行垂直居中输出
+	CRect rcText = rect;
 	CRect rcTemp = rect;
 	LPCTSTR pstrText = GetText();
-	int nTextHegiht = pDC->DrawText(pstrText, rect, DT_CALCRECT|DT_CENTER|DT_EDITCONTROL|DT_WORDBREAK);
+	int nTextHegiht = pDC->DrawText(pstrText, rcText, DT_CALCRECT|DT_CENTER|DT_EDITCONTROL|DT_WORDBREAK);
 	rect = rcTemp;//计算完成后将原来的区域赋回rect
+
+	if (bShowArrow)
+	{
+		if ((GetFormat() & DT_CENTER) != 0)				// 居中
+		{
+			if (rcArrow.Width() + rcText.Width() > rect.Width())
+			{
+				rcText.right = rect.right -  rcArrow.Width();
+
+				rcArrow.left = rcText.right;
+				rcArrow.right = rect.right;
+			}
+			else
+			{
+				CRect rcTemp;
+				rcTemp.top = rect.top;
+				rcTemp.bottom = rect.bottom;
+				rcTemp.left = rect.left + (rect.Width() - (rcText.Width() + rcArrow.Width()))/2;
+				rcTemp.right = rcTemp.left +  rcText.Width() + rcArrow.Width();
+
+				int nArrowWidth = rcArrow.Width();
+				rcArrow.right = rcTemp.right;
+				rcArrow.left = rcArrow.right - nArrowWidth;
+
+				rcText.right = rcArrow.left;
+				rcText.left = rcTemp.left;
+			}
+			rcText.top = rect.top;
+			rcText.bottom = rect.bottom;
+
+			rcArrow.top = rect.top;
+			rcArrow.bottom = rect.bottom;
+		}
+		else
+		{
+			if (rcArrow.Width() + rcText.Width() > rect.Width())
+			{
+				rcText.right = rect.right -  rcArrow.Width();
+
+				rcArrow.left = rcText.right;
+				rcArrow.right = rect.right;
+			}
+			else
+			{
+				int nArrowWidth = rcArrow.Width();
+				rcArrow.left = rcText.right;
+				rcArrow.right = rcArrow.left + nArrowWidth;
+			}
+			rcText.left = rect.left;
+			rcText.top = rect.top;
+			rcText.bottom = rect.bottom;
+
+			rcArrow.top = rect.top;
+			rcArrow.bottom = rect.bottom;
+		}
+	}
+	else
+	{
+		rcText = rect;
+	}
+
 	if(rcTemp.Height() > nTextHegiht)//判断高度是否超出范围，以免出现负数情况
 	{
 		//rect.top += (rcTemp.Height() - nTextHegiht)/2;//计算空白高度的一半，这里要用+=
 	}
-	 pDC->DrawText(pstrText, rect, this->GetFormat()|DT_EDITCONTROL|DT_WORDBREAK); //输出垂直居中+左右居中+自动
+//	pDC->FillSolidRect(rect, RGB(0X000, 0X00, 0XFF));
+	pDC->DrawText(pstrText, rcText, this->GetFormat()|DT_WORDBREAK| DT_END_ELLIPSIS); //输出垂直居中+左右居中+自动
+	if (bShowArrow)
+	{
+		COLORREF clrOldArrow = pDC->SetTextColor(clrArrow);
+		pDC->DrawText(strArrow, rcArrow, DT_SINGLELINE | DT_VCENTER | DT_CENTER | DT_END_ELLIPSIS);
+		pDC->SetTextColor(clrOldArrow);
+	}
    // DrawText(pDC->m_hDC, GetText(), -1, rect, DT_LEFT | DT_EDITCONTROL | DT_WORDBREAK);
    // DrawText(pDC->m_hDC, GetText(), -1, rect, this->GetFormat()  );
 	

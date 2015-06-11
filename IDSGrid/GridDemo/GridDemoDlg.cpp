@@ -220,13 +220,14 @@ void CGridDemoDlg::CreateGrid()
 	m_pGridCtrl->SetSingleRowSelection(TRUE);
 	m_pGridCtrl->SetHeaderSort(TRUE);
 // 	m_pGridCtrl->SetGridLines(GVL_NONE);
-	m_pGridCtrl->SetGridLines(GVL_BOTH);
+	m_pGridCtrl->SetGridLines(GVL_NONE);
 	m_pGridCtrl->SetGridLineColor(RGB(0XFF,0X00, 0XFF));
 	//m_pGridCtrl->SetCompareFunction(SortItemCallBack, (DWORD)this);
 	m_pGridCtrl->SetCompareFunction(NULL, (DWORD)this);
 	m_pGridCtrl->EnableDragAndDrop(TRUE);
+	m_pGridCtrl->SetEnableSelectCol(TRUE);
 
-	m_pGridCtrl->SetDefCellMargin(20);
+	m_pGridCtrl->SetDefCellMargin(3);
 //	m_pGridCtrl->SetDefCellVMargin(4);
 //	m_pGridCtrl->ExpandColumnsToFit(FALSE);
 //	m_pGridCtrl->SetFixed
@@ -256,12 +257,14 @@ void CGridDemoDlg::CreateGrid()
 			{
 				m_pGridCtrl->SetItemBkColour(ii, jj, 0);
 				m_pGridCtrl->SetItemFgColour(ii,jj, RGB(255, 255,255));
-				int nAlign = DT_RIGHT;	
-				if(jj%3==0)
-				{
-					nAlign = DT_LEFT;
-				}
+				int nAlign = DT_CENTER | DT_CENTER | DT_SINGLELINE;
+				//int nAlign = DT_RIGHT | DT_VCENTER | DT_SINGLELINE;	
+				//if(jj%3==0)
+				//{
+				//	nAlign = DT_LEFT | DT_VCENTER| DT_SINGLELINE;
+				//}
 				m_pGridCtrl->SetItemFormat(ii, jj, nAlign);
+				m_pGridCtrl->SetItemFont(ii, jj, 20, _T("Î¢ÈíÑÅºÚ"));
 			}
 		}
 		else
@@ -276,10 +279,10 @@ void CGridDemoDlg::CreateGrid()
 				}
 				m_pGridCtrl->SetItemBkColour(ii, jj, 0);
 				m_pGridCtrl->SetItemFgColour(ii,jj, clText);
-				int nAlign = DT_RIGHT;	
+				int nAlign = DT_RIGHT | DT_VCENTER| DT_SINGLELINE;	
 				if(jj%3==0)
 				{
-					nAlign = DT_LEFT;
+					nAlign = DT_LEFT | DT_VCENTER| DT_SINGLELINE;
 				}
 				m_pGridCtrl->SetItemFormat(ii, jj, nAlign);
 				int nVal = rand();

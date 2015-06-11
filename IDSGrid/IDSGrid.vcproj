@@ -112,7 +112,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy              /y               debug\IDSGrid_d.dll               .\GridDemo\debug\&#x0D;&#x0A;"
+				CommandLine="copy              /y               debug\IDSGrid_d.dll               .\GridDemo\debug\&#x0D;&#x0A;copy              /y               debug\IDSGrid_d.lib               .\GridDemo\&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration

@@ -2703,24 +2703,28 @@ void CIDSGridCtrl::OnBeginDrag()
 	if (!m_bAllowDragAndDrop && m_CurCol==-1)
 	return;
 
-	if (m_CurCol>=0)	pSource = new COleDataSource();
-	if (!pSource && m_bAllowDragAndDrop) pSource = CopyTextFromGrid();
+	if (m_CurCol>=0)	
+		pSource = new COleDataSource();
+	if (!pSource && m_bAllowDragAndDrop) 
+		pSource = CopyTextFromGrid();
 	if (pSource)
 	{
-	SendMessageToParent(GetSelectedCellRange().GetTopLeft().row,
-	GetSelectedCellRange().GetTopLeft().col,
-	GVN_BEGINDRAG);
+		SendMessageToParent(GetSelectedCellRange().GetTopLeft().row,
+			GetSelectedCellRange().GetTopLeft().col,
+			GVN_BEGINDRAG);
 
-	m_MouseMode = MOUSE_DRAGGING;
-	m_bLMouseButtonDown = FALSE;
+		m_MouseMode = MOUSE_DRAGGING;
+		m_bLMouseButtonDown = FALSE;
 
-	DROPEFFECT dropEffect = pSource->DoDragDrop(DROPEFFECT_COPY | DROPEFFECT_MOVE);
+		OutputDebugString(_T("Beginning"));
+		DROPEFFECT dropEffect = pSource->DoDragDrop(DROPEFFECT_COPY | DROPEFFECT_MOVE);
+		OutputDebugString(_T("Ending"));
 
-	if (dropEffect & DROPEFFECT_MOVE)
-	CutSelectedText();
+		if (dropEffect & DROPEFFECT_MOVE)
+			CutSelectedText();
 
-	if (pSource)
-	delete pSource;    // Did not pass source to clipboard, so must delete
+		if (pSource)
+			delete pSource;    // Did not pass source to clipboard, so must delete
 
 	}
 }
@@ -8003,7 +8007,7 @@ void CIDSGridCtrl::ResetCustomize()
 
 void CIDSGridCtrl::SetEnableSelectCol(BOOL bEnable)
 {
-	m_bEnableSelectCol = FALSE;
+	m_bEnableSelectCol = bEnable;
 }
 
 void CIDSGridCtrl::SetBeforeDrawFunc(UserDraw pBeforeDrawFun, DWORD dwBeforeContext)

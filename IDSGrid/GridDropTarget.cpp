@@ -55,7 +55,7 @@ CIDSGridDropTarget::~CIDSGridDropTarget()
 // where all drop messages will ultimately be forwarded.
 BOOL CIDSGridDropTarget::Register(CIDSGridCtrl *pGridCtrl)
 {
-	return TRUE;
+//	return TRUE;
     if (m_bRegistered)
         return FALSE;
 

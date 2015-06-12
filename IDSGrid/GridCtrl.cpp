@@ -2309,7 +2309,8 @@ void CIDSGridCtrl::SetSelectedRange(int nMinRow, int nMinCol, int nMaxRow, int n
 				}
 			}
 	}
-	//    TRACE(_T("%d cells selected.\n"), m_SelectedCellMap.GetCount());
+	    TRACE(_T("m_SelectedCellMap %d cells selected.\n"), m_SelectedCellMap.GetCount());
+	    TRACE(_T("m_PrevSelectedCellMap %d cells selected.\n"), m_PrevSelectedCellMap.GetCount());
 
 	if (pDC != NULL)
 		ReleaseDC(pDC);
@@ -6660,7 +6661,7 @@ void CIDSGridCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 				OnFixedRowClick(m_LeftClickDownCell);
 				if(m_AllowReorderColumn && m_LeftClickDownCell.col >=  GetFixedColumnCount())
 				{
-					//ResetSelectedRange(); // TODO : This is not the better solution, as we do not see why clicking in column header should reset selection
+//					ResetSelectedRange(); // TODO : This is not the better solution, as we do not see why clicking in column header should reset selection
 					//but the state of selection is instable after drag (at least until someone debugs it), so better clear it allways.
 					m_MouseMode = MOUSE_PREPARE_DRAG;
 					m_CurCol = m_LeftClickDownCell.col;
@@ -7733,12 +7734,12 @@ CImageList* CIDSGridCtrl::CreateDragImage(CPoint *pHotSpot)
 }
 #endif
 
-void CIDSGridCtrl::OnFixedRowClick(CIDSCellID& cell)
+void CIDSGridCtrl::OnFixedRowClick(CIDSCellID& cell , BOOL bSort /*= TRUE*/)
 {
 	if (!IsValid(cell))
 		return;
 
-	if (GetHeaderSort())
+	if (GetHeaderSort() && bSort)
 	{
 		CWaitCursor waiter;
 		int nSortCol = GetSortColumn();

@@ -642,7 +642,7 @@ protected:
 
     // Mouse Clicks
     virtual void  OnFixedColumnClick(CIDSCellID& cell);
-    virtual void  OnFixedRowClick(CIDSCellID& cell);
+    virtual void  OnFixedRowClick(CIDSCellID& cell, BOOL bSort = TRUE);
 
     // Editing
     virtual void  OnEditCell(int nRow, int nCol, CPoint point, UINT nChar);

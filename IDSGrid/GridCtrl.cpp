@@ -2716,9 +2716,7 @@ void CIDSGridCtrl::OnBeginDrag()
 		m_MouseMode = MOUSE_DRAGGING;
 		m_bLMouseButtonDown = FALSE;
 
-		OutputDebugString(_T("Beginning"));
 		DROPEFFECT dropEffect = pSource->DoDragDrop(DROPEFFECT_COPY | DROPEFFECT_MOVE);
-		OutputDebugString(_T("Ending"));
 
 		if (dropEffect & DROPEFFECT_MOVE)
 			CutSelectedText();
@@ -6662,7 +6660,7 @@ void CIDSGridCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 				OnFixedRowClick(m_LeftClickDownCell);
 				if(m_AllowReorderColumn && m_LeftClickDownCell.col >=  GetFixedColumnCount())
 				{
-					ResetSelectedRange(); // TODO : This is not the better solution, as we do not see why clicking in column header should reset selection
+					//ResetSelectedRange(); // TODO : This is not the better solution, as we do not see why clicking in column header should reset selection
 					//but the state of selection is instable after drag (at least until someone debugs it), so better clear it allways.
 					m_MouseMode = MOUSE_PREPARE_DRAG;
 					m_CurCol = m_LeftClickDownCell.col;
@@ -6721,7 +6719,7 @@ void CIDSGridCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 			pCell->OnClick( GetPointClicked( m_idCurrentCell.row, m_idCurrentCell.col, point) );
 		SendMessageToParent(m_LeftClickDownCell.row, m_LeftClickDownCell.col, NM_CLICK);
 		SendMessageToParent(m_LeftClickDownCell.row, m_LeftClickDownCell.col, GVN_SELCHANGING);
-		ResetSelectedRange();
+//		ResetSelectedRange();
 		SendMessageToParent(m_idCurrentCell.row, m_idCurrentCell.col, GVN_SELCHANGED);
 	}
 #endif
@@ -7759,7 +7757,8 @@ void CIDSGridCtrl::OnFixedRowClick(CIDSCellID& cell)
 	// fixed row and column cells) - (fix by David Pritchard)
 	if (GetFixedColumnSelection())
 	{
-		if (cell.col < GetFixedColumnCount())
+//		if (cell.col < GetFixedColumnCount())
+		if (cell.row < GetFixedRowCount())
 		{
 			if(m_bSingleRowSelection)
 			{

@@ -487,9 +487,9 @@ public:
  public:
     CIDSCellRange GetCellRange() const;
     CIDSCellRange GetSelectedCellRange() const;
-    void SetSelectedRange(const CIDSCellRange& Range, BOOL bForceRepaint = FALSE, BOOL bSelectCells = TRUE);
+    void SetSelectedRange(const CIDSCellRange& Range, BOOL bForceRepaint = TRUE, BOOL bSelectCells = TRUE);
     void SetSelectedRange(int nMinRow, int nMinCol, int nMaxRow, int nMaxCol,
-                          BOOL bForceRepaint = FALSE, BOOL bSelectCells = TRUE);
+                          BOOL bForceRepaint = TRUE, BOOL bSelectCells = TRUE);
     BOOL IsValid(int nRow, int nCol) const;
     BOOL IsValid(const CIDSCellID& cell) const;
     BOOL IsValid(const CIDSCellRange& range) const;
@@ -889,6 +889,8 @@ public:
 	static void SetGridFont(LPCTSTR pszFontName, int nFontHeight = 0, int nFontWeight = 0);
 private:
 	void ResetCustomize();
+	
+	void ClearSelectCells();
 
 };
 

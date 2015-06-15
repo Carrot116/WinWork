@@ -6321,6 +6321,7 @@ void CIDSGridCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	// CWnd::OnLButtonDown(nFlags, point);
 
 	SetFocus();
+ClearCells(GetSelectedCellRange());
 
 	m_CurCol = -1;
 	m_bLMouseButtonDown   = TRUE;
@@ -7923,6 +7924,7 @@ void CIDSGridCtrl::ResetVirtualOrder()
 
 void CIDSGridCtrl::Reorder(int From, int To)
 {
+	return;
 	// Set line From just after Line To
 	ASSERT(From>= GetFixedRowCount() && To>=GetFixedRowCount()-1 && From<m_nRows && To<m_nRows);
 	int Value = m_arRowOrder[From];
@@ -8003,6 +8005,49 @@ void CIDSGridCtrl::ResetCustomize()
 	m_bDrawFocusCell = FALSE;
 	m_clSelectBK = RGB(54, 59,70);
 	m_bEnableSelectCol = FALSE;
+}
+
+void CIDSGridCtrl::ClearSelectCells()
+{
+
+	CDC* pDC = GetDC();
+	POSITION pos;
+	// Unselect all previously selected cells
+	for (pos = m_SelectedCellMap.GetStartPosition(); pos != NULL; )
+	{
+		DWORD key;
+		CIDSCellID cell;
+		m_SelectedCellMap.GetNextAssoc(pos, key, (CIDSCellID&)cell);
+
+		// Reset the selection flag on the cell
+		if (IsValid(cell))
+		{
+			// This will remove the cell from the m_SelectedCellMap map
+			SetItemState(cell.row, cell.col,
+				GetItemState(cell.row, cell.col) & ~GVIS_SELECTED);
+
+			//// If this is to be reselected, continue on past the redraw
+			//if (nMinRow <= cell.row && cell.row <= nMaxRow &&
+			//	nMinCol <= cell.col && cell.col <= nMaxCol)
+			//	continue;
+
+			//if ( (VisCellRange.IsValid() && VisCellRange.InRange( cell )) || FixedVisCellRange.InRange( cell ) )
+			//{
+			//	if (bForceRepaint && pDC)                    // Redraw NOW
+			//		RedrawCell(cell.row, cell.col, pDC);
+			//	else
+			//		InvalidateCellRect(cell);                // Redraw at leisure
+			//}
+
+			RedrawCell(cell.row, cell.col, pDC);
+		}
+		else
+		{
+			m_SelectedCellMap.RemoveKey( key);  // if it's not valid, get rid of it!
+		}
+	}
+	ReleaseDC(pDC);
+	m_SelectedCellMap.RemoveAll();
 }
 
 void CIDSGridCtrl::SetEnableSelectCol(BOOL bEnable)

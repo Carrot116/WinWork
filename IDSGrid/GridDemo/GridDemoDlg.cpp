@@ -182,7 +182,7 @@ void CGridDemoDlg::CreateGrid()
 		{0, _T("涨幅"), COLWIDTH},
 		{0, _T("总手"), COLWIDTH},
 		{0, _T("现手"), COLWIDTH},
-		{0, _T("买价"), COLWIDTH},
+/*		{0, _T("买价"), COLWIDTH},
 		{0, _T("卖价"), COLWIDTH},
 		{0, _T("买量"), COLWIDTH},
 		{0, _T("卖量"), COLWIDTH},
@@ -190,12 +190,12 @@ void CGridDemoDlg::CreateGrid()
 		{0, _T("流出"), COLWIDTH},
 		{0, _T("净流入"), COLWIDTH},
 		{0, _T("净流出"), COLWIDTH},
-		{0, _T("持仓"), COLWIDTH}		
+		{0, _T("持仓"), COLWIDTH}	*/	
 	};
 	
 	DWORD dwStartTime = ::GetTickCount();
 	int nGridItemNum = sizeof(tColArr)/sizeof(tagColInfo);
-	int nRowCount = 800;
+	int nRowCount = /*800*/ 20;
 	CRect rcClient;
 	if(NULL == m_pGridCtrl)
 	{		

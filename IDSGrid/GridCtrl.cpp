@@ -2732,72 +2732,74 @@ void CIDSGridCtrl::OnBeginDrag()
 DROPEFFECT CIDSGridCtrl::OnDragOver(COleDataObject* pDataObject, DWORD dwKeyState,
 									CPoint point)
 {   
-	
+
 	// Find which cell we are over and drop-highlight it
 	CIDSCellID cell = GetCellFromPt(point, FALSE);
 	bool Valid;
 	// Any text data available for us?
 	if(m_CurCol==-1)
 	{
-	if(m_bDragRowMode)
-	{
-	Valid = cell.col>=GetFixedColumnCount() && cell.row>=GetFixedRowCount();
+		if(m_bDragRowMode)
+		{
+			Valid = cell.col>=GetFixedColumnCount() && cell.row>=GetFixedRowCount();
+		}
+		else
+		{
+			if (!m_bAllowDragAndDrop || !IsEditable() || !pDataObject->IsDataAvailable(CF_TEXT))
+				return DROPEFFECT_NONE;
+			Valid = IsValid(cell)!=0;
+		}
 	}
 	else
 	{
-	if (!m_bAllowDragAndDrop || !IsEditable() || !pDataObject->IsDataAvailable(CF_TEXT))
-	return DROPEFFECT_NONE;
-	Valid = IsValid(cell)!=0;
-	}
-	}
-	else
-	{
-	Valid = cell.col>=GetFixedColumnCount() &&   cell.row<GetFixedRowCount() ;
+		Valid = cell.col>=GetFixedColumnCount() &&   cell.row<GetFixedRowCount() ;
 	}
 
 
 	// If not valid, set the previously drop-highlighted cell as no longer drop-highlighted
 	if (!Valid)
 	{
-	OnDragLeave();
-	m_LastDragOverCell = CIDSCellID(-1,-1);
-	return DROPEFFECT_NONE;
+		OnDragLeave();
+		m_LastDragOverCell = CIDSCellID(-1,-1);
+		return DROPEFFECT_NONE;
 	}
 	if(m_CurCol==-1)
 	{
-	if (!m_bDragRowMode && !IsCellEditable(cell))
-	return DROPEFFECT_NONE;
+		if (!m_bDragRowMode && !IsCellEditable(cell))
+			return DROPEFFECT_NONE;
 	}
 
 	// Have we moved over a different cell than last time?
 	if (cell != m_LastDragOverCell)
 	{
-	// Set the previously drop-highlighted cell as no longer drop-highlighted
-	if (IsValid(m_LastDragOverCell))
-	{
-	UINT nState = GetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col);
-	SetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col,
-	nState & ~GVIS_DROPHILITED);
-	RedrawCell(m_LastDragOverCell);
-	}
+		// Set the previously drop-highlighted cell as no longer drop-highlighted
+		if (IsValid(m_LastDragOverCell))
+		{
+			UINT nState = GetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col);
+			SetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col,
+				nState & ~GVIS_DROPHILITED);
+			RedrawCell(m_LastDragOverCell);
+		}
 
-	m_LastDragOverCell = cell;
+		m_LastDragOverCell = cell;
+		if (m_LastDragOverCell.row == -1)
+			m_LastDragOverCell.row = 0;
 
-	// Set the new cell as drop-highlighted
-	if (IsValid(m_LastDragOverCell))
-	{
-	UINT nState = GetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col);
-	SetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col,
-	nState | GVIS_DROPHILITED);
-	RedrawCell(m_LastDragOverCell);
-	}
+		// Set the new cell as drop-highlighted
+		if (IsValid(m_LastDragOverCell))
+		{
+			UINT nState = GetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col);
+			SetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col,
+				nState | GVIS_DROPHILITED);
+			RedrawCell(m_LastDragOverCell);
+		}
 	}
 
 	// Return an appropraite value of DROPEFFECT so mouse cursor is set properly
 	if (dwKeyState & MK_CONTROL)
-	return DROPEFFECT_COPY;
+		return DROPEFFECT_COPY;
 	else
-	return DROPEFFECT_MOVE;
+		return DROPEFFECT_MOVE;
 
 	return DROPEFFECT_NONE;
 }
@@ -2809,40 +2811,44 @@ DROPEFFECT CIDSGridCtrl::OnDragEnter(COleDataObject* pDataObject, DWORD dwKeySta
 	
 	// Any text data available for us?
 	m_LastDragOverCell = GetCellFromPt(point, m_CurCol>=0);
+	if (m_LastDragOverCell.row == -1)
+	{
+		m_LastDragOverCell.row = 0;
+	}
 	bool Valid;
 	if(m_CurCol==-1)
 	{
-	if (!m_bAllowDragAndDrop || !pDataObject->IsDataAvailable(CF_TEXT))
-	return DROPEFFECT_NONE;
+		if (!m_bAllowDragAndDrop || !pDataObject->IsDataAvailable(CF_TEXT))
+			return DROPEFFECT_NONE;
 
-	// Find which cell we are over and drop-highlight it
-	if (!IsValid(m_LastDragOverCell))
-	return DROPEFFECT_NONE;
+		// Find which cell we are over and drop-highlight it
+		if (!IsValid(m_LastDragOverCell))
+			return DROPEFFECT_NONE;
 
-	if (!IsCellEditable(m_LastDragOverCell))
-	return DROPEFFECT_NONE;
-	Valid = IsValid(m_LastDragOverCell)!=0;
+		if (!IsCellEditable(m_LastDragOverCell))
+			return DROPEFFECT_NONE;
+		Valid = IsValid(m_LastDragOverCell)!=0;
 
 	}
 	else
 	{
-	Valid = m_LastDragOverCell.row>=0 && m_LastDragOverCell.row<GetFixedRowCount() && m_LastDragOverCell.col>=GetFixedColumnCount();
+		Valid = m_LastDragOverCell.row>=0 && m_LastDragOverCell.row<GetFixedRowCount() && m_LastDragOverCell.col>=GetFixedColumnCount();
 	}
 
 	if (Valid)
 	{
-	UINT nState = GetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col);
-	SetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col,
-	nState | GVIS_DROPHILITED);
-	RedrawCell(m_LastDragOverCell);
+		UINT nState = GetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col);
+		SetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col,
+			nState | GVIS_DROPHILITED);
+		RedrawCell(m_LastDragOverCell);
 	}
 
 	// Return an appropraite value of DROPEFFECT so mouse cursor is set properly
 	if (dwKeyState & MK_CONTROL)
-	return DROPEFFECT_COPY;
+		return DROPEFFECT_COPY;
 	else
-	return DROPEFFECT_MOVE;
-	
+		return DROPEFFECT_MOVE;
+
 	return DROPEFFECT_NONE;
 }
 
@@ -2852,10 +2858,12 @@ void CIDSGridCtrl::OnDragLeave()
 	// Set the previously drop-highlighted cell as no longer drop-highlighted
 	if (IsValid(m_LastDragOverCell))
 	{
-	UINT nState = GetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col);
-	SetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col,
-	nState & ~GVIS_DROPHILITED);
-	RedrawCell(m_LastDragOverCell);
+		UINT nState = GetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col);
+		SetItemState(m_LastDragOverCell.row, m_LastDragOverCell.col,
+			nState & ~GVIS_DROPHILITED);
+		RedrawCell(m_LastDragOverCell);
+
+		TRACE(_T("m_SelectedCellMap %d cells selected.\n"), m_SelectedCellMap.GetCount());
 	}
 	
 }
@@ -4999,7 +5007,7 @@ BOOL CIDSGridCtrl::SetItemFormat(int nRow, int nCol, UINT nFormat)
 		return FALSE;
 
 	CIDSGridCellBase* pCell = GetCell(nRow, nCol);
-	ASSERT(pCell);
+	ASSERT(pCell); 
 	if (!pCell)
 		return FALSE;
 
@@ -6321,7 +6329,6 @@ void CIDSGridCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	// CWnd::OnLButtonDown(nFlags, point);
 
 	SetFocus();
-ClearCells(GetSelectedCellRange());
 
 	m_CurCol = -1;
 	m_bLMouseButtonDown   = TRUE;

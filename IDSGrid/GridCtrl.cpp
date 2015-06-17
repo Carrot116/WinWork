@@ -2021,7 +2021,7 @@ BOOL CIDSGridCtrl::RedrawCell(int nRow, int nCol, CDC* pDC /* = NULL */)
 
 			// Since we have erased the background, we will need to redraw the gridlines
 			CPen pen;
-			pen.CreatePen(PS_SOLID, 0, m_crGridLineColour);
+			pen.CreatePen(PS_SOLID, 1, m_crGridLineColour);
 
 			CPen* pOldPen = (CPen*) pDC->SelectObject(&pen);
 			if (m_nGridLines == GVL_BOTH || m_nGridLines == GVL_HORZ)
@@ -2430,7 +2430,7 @@ void CIDSGridCtrl::OnSelecting(const CIDSCellID& currentCell)
 		SelectAllCells();
 		break;
 	case MOUSE_SELECT_COL:
-		SelectColumns(currentCell, FALSE);
+//		SelectColumns(currentCell, FALSE);
 		break;
 	case MOUSE_SELECT_ROW:
 		SelectRows(currentCell, FALSE);
@@ -2734,7 +2734,8 @@ DROPEFFECT CIDSGridCtrl::OnDragOver(COleDataObject* pDataObject, DWORD dwKeyStat
 {   
 
 	// Find which cell we are over and drop-highlight it
-	CIDSCellID cell = GetCellFromPt(point, FALSE);
+//	CIDSCellID cell = GetCellFromPt(point, FALSE);
+	CIDSCellID cell = GetCellFromPt(point, TRUE);
 	bool Valid;
 	// Any text data available for us?
 	if(m_CurCol==-1)
@@ -2810,7 +2811,8 @@ DROPEFFECT CIDSGridCtrl::OnDragEnter(COleDataObject* pDataObject, DWORD dwKeySta
 {   
 	
 	// Any text data available for us?
-	m_LastDragOverCell = GetCellFromPt(point, m_CurCol>=0);
+//	m_LastDragOverCell = GetCellFromPt(point, m_CurCol>=0);
+	m_LastDragOverCell = GetCellFromPt(point, TRUE);
 	if (m_LastDragOverCell.row == -1)
 	{
 		m_LastDragOverCell.row = 0;
@@ -6181,12 +6183,14 @@ void CIDSGridCtrl::OnMouseMove(UINT /*nFlags*/, CPoint point)
 		case MOUSE_PREPARE_EDIT:
 		case MOUSE_PREPARE_DRAG:
 			m_MouseMode = MOUSE_PREPARE_DRAG;
+			OutputDebugString(_T("*******___BeforBeginDrag___*******\n"));
 			OnBeginDrag();    
+			OutputDebugString(_T("*******___AfterBeginDrag___*******\n"));
 			break;
 #endif
 		}    
 	}
-
+OutputDebugString(_T("*******___________*******\n"));
 	m_LastMousePoint = point;
 }
 
@@ -6666,7 +6670,7 @@ void CIDSGridCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 
 			if (m_LeftClickDownCell.row < GetFixedRowCount())
 			{
-				OnFixedRowClick(m_LeftClickDownCell);
+				//OnFixedRowClick(m_LeftClickDownCell);			//  Notes By Carrot 20150617  ±êÌâÍÏ¶¯
 				if(m_AllowReorderColumn && m_LeftClickDownCell.col >=  GetFixedColumnCount())
 				{
 //					ResetSelectedRange(); // TODO : This is not the better solution, as we do not see why clicking in column header should reset selection

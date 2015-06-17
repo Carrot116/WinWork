@@ -292,7 +292,13 @@ BOOL CIDSGridCellBase::Draw(CDC* pDC, int nRow, int nCol, CRect rect,  BOOL bEra
     else if ((GetState() & GVIS_SELECTED))
     {
         rect.right++; rect.bottom++;    // FillRect doesn't draw RHS or bottom
-        pDC->FillSolidRect(rect, pGrid->GetSelectItemBKColor());//RGB(215, 187, 90));
+//        pDC->FillSolidRect(rect, pGrid->GetSelectItemBKColor());//RGB(215, 187, 90));
+		pDC->FillSolidRect(rect, pGrid->GetBkColor());//RGB(215, 187, 90));
+		CPen newPen(PS_SOLID, 1, RGB(0X30, 0XF0, 0XF0));
+		CPen* pOldPen = pDC->SelectObject(&newPen);
+		pDC->MoveTo(rect.left, rect.bottom - 1);
+		pDC->LineTo(rect.right, rect.bottom - 1);
+		pDC->SelectObject(pOldPen);
         rect.right--; rect.bottom--;
 		pDC->SetTextColor(TextClr);
       //  pDC->SetTextColor(::GetSysColor(COLOR_HIGHLIGHTTEXT));

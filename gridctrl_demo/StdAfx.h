@@ -25,4 +25,8 @@
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Developer Studio will insert additional declarations immediately before the previous line.
 
+
+
+
+
 #endif // !defined(AFX_STDAFX_H__34B6D7A8_9CDC_11D1_9C11_00A0243D1382__INCLUDED_)
